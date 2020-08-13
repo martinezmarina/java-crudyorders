@@ -24,7 +24,6 @@ public class Order{
     private Customer customer;
 
 
-
     @ManyToMany()
     @JoinTable(name = "orderspayments",
             joinColumns = @JoinColumn(name = "ordnum"),
@@ -53,10 +52,7 @@ public class Order{
         return ordnum;
     }
 
-    public void setOrdnum(long ordnum)
-    {
-        this.ordnum = ordnum;
-    }
+    public void setOrdnum(long ordnum) { this.ordnum = ordnum;}
 
     public double getOrdamount()
     {

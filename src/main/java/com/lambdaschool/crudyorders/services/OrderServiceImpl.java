@@ -1,7 +1,11 @@
 package com.lambdaschool.crudyorders.services;
 
+import com.lambdaschool.crudyorders.models.Customer;
 import com.lambdaschool.crudyorders.models.Order;
+import com.lambdaschool.crudyorders.models.Payment;
+import com.lambdaschool.crudyorders.repositories.CustomersRepository;
 import com.lambdaschool.crudyorders.repositories.OrdersRepository;
+import com.lambdaschool.crudyorders.repositories.PaymentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +17,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrdersRepository orderrepos;
+
+    @Autowired
+    private CustomersRepository custrepos;
+
+    @Autowired
+    private PaymentsRepository paymentrepos;
 
     @Override
     public Order findOrderById(long id) {
@@ -31,7 +41,18 @@ public class OrderServiceImpl implements OrderService {
         newOrder.setAdvanceamount(order.getAdvanceamount());
         newOrder.setCustomer(order.getCustomer());
         newOrder.setOrdamount(order.getOrdamount());
-       // newOrder.setOrderdescription(order.setOrderdescription());
+        newOrder.setOrderdescription(order.getOrderdescription());
+
+        newOrder.getPayments().clear();
+        for (Payment p : order.getPayments()) {
+            Payment newPayment = paymentrepos.findById(p.getPaymentid())
+                    .orElseThrow(() -> new EntityNotFoundException("Payment " + p.getPaymentid() + "Not Found"));
+            newOrder.getPayments().add(newPayment);
+        }
+        Customer newCustomer = custrepos.findById(newOrder.getCustomer().getCustcode())
+                .orElseThrow(() -> new EntityNotFoundException("Customer " + newOrder.getCustomer().getCustcode() + " Not Found"));
+        newOrder.setCustomer(newCustomer);
+
         return orderrepos.save(newOrder);
     }
     @Transactional
