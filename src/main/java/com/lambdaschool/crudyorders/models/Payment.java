@@ -24,6 +24,10 @@ public class Payment {
     public Payment() {
     }
 
+    public Payment(String type) {
+        this.type = type;
+    }
+
     public long getPaymentid() {
         return paymentid;
     }

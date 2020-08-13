@@ -11,4 +11,6 @@ public interface CustomerService {
     List<Customer> listCustomersByLikeName(String name);
     List<OrderCount> getOrderCount();
     Customer save(Customer customer);
+    Customer update(Customer customer, long id);
+    void delete(long id);
 }
